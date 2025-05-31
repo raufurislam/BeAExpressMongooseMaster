@@ -5,18 +5,16 @@ class SchoolBell extends EventEmitter {}
 const schoolBell = new SchoolBell();
 
 schoolBell.on("ring", () => {
-  console.log("Class sesh!");
+  console.log("Class sesh!😊");
+});
+
+schoolBell.on("ring", () => {
+  console.log("One more class!?😒");
+});
+
+schoolBell.on("broken", () => {
+  console.log("Class will be continued for infinity.😁");
 });
 
 schoolBell.emit("ring");
-
-const EventEmitter = require("node:events");
-class SchoolBellP extends EventEmitter {}
-
-const schoolBellp = new SchoolBellP();
-
-schoolBellp.on("ringP", () => {
-  console.log("Tetsxf");
-});
-
-schoolBellp.emit("ringP");
+schoolBell.emit("broken");
