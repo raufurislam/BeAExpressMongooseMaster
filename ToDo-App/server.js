@@ -1,31 +1,6 @@
 // Basic Todo app with nodejs
 const http = require("http");
 
-/**
-[
-  {
-    "title": "prisma",
-    "body": "Learning prisma",
-    "createdAt": "5/18/2025, 1:25:02 AM"
-  },
-  {
-    "title": "typescript",
-    "body": "learning node",
-    "createdAt": "5/18/2025, 1:25:12 AM"
-  },
-  {
-    "title": "express",
-    "body": "Learning advanced express",
-    "createdAt": "5/29/2025, 5:55:16 AM"
-  },
-  {
-    "title": "mongodb",
-    "body": "learning mongodb",
-    "createdAt": "5/29/2025, 5:55:46 AM"
-  }
-] 
-*/
-
 const data = [
   {
     title: "prisma",
