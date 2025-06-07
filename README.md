@@ -1,4 +1,4 @@
-# Node.js Learning Guide
+# **`Node.js Learning Guide`**
 
 This guide serves as a reference for installing Node.js using `fnm` and understanding the core fundamentals of Node.js including module systems and architecture. This will help you relate your past learning and continue building advanced concepts in the future.
 
@@ -183,4 +183,218 @@ Used to create scope and encapsulate logic:
 
 ---
 
-✅ This is your clean starting point for learning Node.js.
+Got it! You want the README to be **cleaner, more practical, and easier to come back to when needed** — like a **personal note with headings**, short code references, and comments on _where and why_ something is used.
+
+Here’s a more **summarized, structured, and recall-friendly** version of your README with corrected notes:
+
+---
+
+# `📘 Node.js Core Modules & Basic Todo App – Summary Notes`
+
+> A concise reference for everything I’ve learned and practiced in Node.js so far.
+
+---
+
+## 🔹 1. Event Module
+
+```js
+const EventEmitter = require("node:events");
+
+class SchoolBell extends EventEmitter {}
+
+const schoolBell = new SchoolBell();
+
+schoolBell.on("ring", () => console.log("Class sesh!😊"));
+schoolBell.on("ring", () => console.log("One more class!?😒"));
+schoolBell.on("broken", () => console.log("Class will continue forever.😁"));
+
+schoolBell.emit("ring");
+schoolBell.emit("broken");
+```
+
+- `EventEmitter` = used to create custom events
+- `.on("event", callback)` = listener
+- `.emit("event")` = trigger
+
+---
+
+## 🔹 2. File System (`fs`) – Synchronous vs Asynchronous
+
+### ✅ Synchronous Example
+
+```js
+const fs = require("fs");
+
+fs.writeFileSync("./hello.txt", "Learning File System");
+const data = fs.readFileSync("./hello.txt", "utf-8");
+console.log(data);
+```
+
+- Blocks execution until done (one-by-one)
+- Used for small tasks/testing
+
+---
+
+### ✅ Asynchronous Example
+
+```js
+fs.writeFile("./hello.txt", "node js", "utf-8", (err) => {
+  if (!err) console.log("Written");
+});
+
+fs.readFile("./hello.txt", "utf-8", (err, data) => {
+  if (!err) console.log(data);
+});
+```
+
+- Doesn’t block the thread
+- Callback executes when task completes
+
+---
+
+## 🔹 3. Streams & Buffer
+
+Efficient for **large files**.
+
+```js
+const readStream = fs.createReadStream("./source.txt", "utf-8");
+const writeStream = fs.createWriteStream("./dest.txt", "utf-8");
+
+readStream.on("data", (chunk) => writeStream.write(chunk));
+readStream.on("end", () => console.log("Read Complete"));
+writeStream.on("finish", () => console.log("Write Complete"));
+```
+
+---
+
+## 🔹 4. Path Module
+
+```js
+const path = require("path");
+const filePath = path.join(__dirname, "log.txt");
+```
+
+- `__dirname` = current folder
+- `path.join()` = avoids hardcoding OS paths
+
+---
+
+## 🔹 5. Logger CLI with `process.argv`
+
+```js
+const args = process.argv.slice(2).join(" ");
+const message = `${args} - ${new Date().toISOString()}\n`;
+
+fs.appendFile("log.txt", message, () => {
+  console.log("✅ Log added");
+});
+```
+
+- Run via terminal: `node index.js Hello world`
+- Stores logs with timestamps
+
+---
+
+## 🔹 6. Basic HTTP Server (Core Module)
+
+```js
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+  // Handle routes
+});
+
+server.listen(5000, () => console.log("Server running"));
+```
+
+---
+
+## 🔹 7. Routing + JSON Header
+
+```js
+res.writeHead(200, { "Content-Type": "application/json" });
+res.end(JSON.stringify({ message: "Hello" }));
+```
+
+---
+
+## 🔹 8. Basic Todo App – Features
+
+**✅ Endpoints:**
+
+| Method | Path                           | Description              |
+| ------ | ------------------------------ | ------------------------ |
+| GET    | `/todos`                       | Get all todos            |
+| GET    | `/todo?title=...`              | Get single todo by title |
+| POST   | `/todos/create-todo`           | Create a new todo        |
+| PATCH  | `/todos/update-todo?title=...` | Update a todo            |
+| DELETE | `/todos/delete-todo?title=...` | Delete a todo            |
+
+### 💾 Data stored in: `./db/todo.json`
+
+---
+
+## 🔹 9. Sample POST (Create Todo)
+
+```js
+req.on("data", (chunk) => {
+  data += chunk;
+});
+req.on("end", () => {
+  const { title, body } = JSON.parse(data);
+  const allTodos = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  allTodos.push({ title, body, createdAt: new Date() });
+  fs.writeFileSync(filePath, JSON.stringify(allTodos, null, 2));
+});
+```
+
+- Collects body data in chunks
+- Parses JSON and saves to file
+
+---
+
+## 🔹 10. Sample GET (Single Todo)
+
+```js
+const title = url.searchParams.get("title");
+const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+const todo = data.find((t) => t.title === title);
+res.end(JSON.stringify(todo));
+```
+
+---
+
+## 🔹 11. Sample PATCH (Update Todo)
+
+```js
+const title = url.searchParams.get("title");
+req.on("end", () => {
+  const { body } = JSON.parse(data);
+  const todos = JSON.parse(fs.readFileSync(filePath));
+  const index = todos.findIndex((t) => t.title === title);
+  todos[index].body = body;
+  fs.writeFileSync(filePath, JSON.stringify(todos, null, 2));
+});
+```
+
+---
+
+## 🔹 12. Sample DELETE (Todo) – \[Add Logic]
+
+```js
+// Same pattern: get title → filter out → save remaining
+```
+
+---
+
+## ✅ Tips
+
+- Use `fs.readFileSync()` for small reads, async version for large apps
+- Always set `Content-Type` headers (`application/json`)
+- Use `process.argv` for CLI input
+- Wrap async code in `try-catch` when using Promises
+- Avoid nested callbacks → consider using Promises in future
+
+---
+
+Let me know if you want this as a downloadable `README.md` file.
