@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
     console.log(req.url, req.method);
     res.send("Welcome to Todos App");
 });
-app.get("/todos/:title/:body", (req, res) => {
+app.get("/todos/:id", (req, res) => {
     console.log("From query", req.query);
     console.log("From params", req.params);
     const data = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
