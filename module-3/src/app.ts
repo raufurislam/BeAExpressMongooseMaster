@@ -6,12 +6,14 @@ const filePath = path.join(__dirname, "../db/todo.json");
 
 app.use(express.json());
 
+const todosRouter = express.Router();
+
 app.get("/", (req: Request, res: Response) => {
   console.log(req.url, req.method);
   res.send("Welcome to Todos App");
 });
 
-app.get("/todos/:id", (req: Request, res: Response) => {
+app.get("/todos", (req: Request, res: Response) => {
   console.log("From query", req.query);
   console.log("From params", req.params);
   const data = fs.readFileSync(filePath, { encoding: "utf-8" });

@@ -9,11 +9,12 @@ const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 const filePath = path_1.default.join(__dirname, "../db/todo.json");
 app.use(express_1.default.json());
+const todosRouter = express_1.default.Router();
 app.get("/", (req, res) => {
     console.log(req.url, req.method);
     res.send("Welcome to Todos App");
 });
-app.get("/todos/:id", (req, res) => {
+app.get("/todos", (req, res) => {
     console.log("From query", req.query);
     console.log("From params", req.params);
     const data = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
