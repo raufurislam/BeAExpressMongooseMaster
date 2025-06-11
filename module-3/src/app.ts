@@ -3,17 +3,26 @@ import fs from "fs";
 import path from "path";
 const app: Application = express();
 const filePath = path.join(__dirname, "../db/todo.json");
-
 app.use(express.json());
 
 const todosRouter = express.Router();
+app.use("/todos", todosRouter);
 
 app.get("/", (req: Request, res: Response) => {
   console.log(req.url, req.method);
   res.send("Welcome to Todos App");
 });
 
-app.get("/todos", (req: Request, res: Response) => {
+todosRouter.get("/all-todos", (req: Request, res: Response) => {
+  const data = fs.readFileSync(filePath, { encoding: "utf-8" });
+  console.log("From todos router");
+  res.json({
+    message: "From todos router",
+    data,
+  });
+});
+
+app.get("/todos/all-todos", (req: Request, res: Response) => {
   console.log("From query", req.query);
   console.log("From params", req.params);
   const data = fs.readFileSync(filePath, { encoding: "utf-8" });

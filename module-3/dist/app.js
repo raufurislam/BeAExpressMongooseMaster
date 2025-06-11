@@ -10,11 +10,20 @@ const app = (0, express_1.default)();
 const filePath = path_1.default.join(__dirname, "../db/todo.json");
 app.use(express_1.default.json());
 const todosRouter = express_1.default.Router();
+app.use("/todos", todosRouter);
 app.get("/", (req, res) => {
     console.log(req.url, req.method);
     res.send("Welcome to Todos App");
 });
-app.get("/todos", (req, res) => {
+todosRouter.get("/all-todos", (req, res) => {
+    const data = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
+    console.log("From todos router");
+    res.json({
+        message: "From todos router",
+        data,
+    });
+});
+app.get("/todos/all-todos", (req, res) => {
     console.log("From query", req.query);
     console.log("From params", req.params);
     const data = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
