@@ -1,42 +1,24 @@
+// app.ts
 import express, { Application, Request, Response } from "express";
-import fs from "fs";
-import path from "path";
+import { todosRouter } from "./app/todos/todos.route";
+
 const app: Application = express();
-const filePath = path.join(__dirname, "../db/todo.json");
 app.use(express.json());
 
-const todosRouter = express.Router();
-app.use("/todos", todosRouter);
+const userRouter = express.Router();
+
+app.use("/todos", todosRouter); // organize code and splitting the route (todos.route.ts)
+app.use("/users", userRouter);
 
 app.get("/", (req: Request, res: Response) => {
   console.log(req.url, req.method);
   res.send("Welcome to Todos App");
 });
 
-todosRouter.get("/all-todos", (req: Request, res: Response) => {
-  const data = fs.readFileSync(filePath, { encoding: "utf-8" });
-  console.log("From todos router");
-  res.json({
-    message: "From todos router",
-    data,
-  });
-});
-
-app.get("/todos/all-todos", (req: Request, res: Response) => {
-  console.log("From query", req.query);
-  console.log("From params", req.params);
-  const data = fs.readFileSync(filePath, { encoding: "utf-8" });
-  // console.log(data);
-  res.json(data);
-});
-
-app.post("/todos/create-todo", (req: Request, res: Response) => {
-  const { title, body } = req.body;
-  console.log(title, body);
-  res.send("Creating todo");
-});
-
 export default app;
+
+// [app]-[express.json()]-[todosRouter]-[Root Route "/"]-[GET "/todos"]-[POST Create ToDo]
+//[todosRouter]-[get all todos /todos GET]-[create todo /todos/create-todo POST todo]
 
 /**
  * Basic file structure

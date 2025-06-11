@@ -3,39 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// app.ts
 const express_1 = __importDefault(require("express"));
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
+const todos_route_1 = require("./app/todos/todos.route");
 const app = (0, express_1.default)();
-const filePath = path_1.default.join(__dirname, "../db/todo.json");
 app.use(express_1.default.json());
-const todosRouter = express_1.default.Router();
-app.use("/todos", todosRouter);
+const userRouter = express_1.default.Router();
+app.use("/todos", todos_route_1.todosRouter); // organize code and splitting the route (todos.route.ts)
+app.use("/users", userRouter);
 app.get("/", (req, res) => {
     console.log(req.url, req.method);
     res.send("Welcome to Todos App");
 });
-todosRouter.get("/all-todos", (req, res) => {
-    const data = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
-    console.log("From todos router");
-    res.json({
-        message: "From todos router",
-        data,
-    });
-});
-app.get("/todos/all-todos", (req, res) => {
-    console.log("From query", req.query);
-    console.log("From params", req.params);
-    const data = fs_1.default.readFileSync(filePath, { encoding: "utf-8" });
-    // console.log(data);
-    res.json(data);
-});
-app.post("/todos/create-todo", (req, res) => {
-    const { title, body } = req.body;
-    console.log(title, body);
-    res.send("Creating todo");
-});
 exports.default = app;
+// [app]-[express.json()]-[todosRouter]-[Root Route "/"]-[GET "/todos"]-[POST Create ToDo]
+//[todosRouter]-[get all todos /todos GET]-[create todo /todos/create-todo POST todo]
 /**
  * Basic file structure
  * server - server handling like - starting, closing error handling of server. only related to server
