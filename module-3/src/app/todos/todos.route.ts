@@ -16,6 +16,11 @@ todosRouter.get("/", (req: Request, res: Response) => {
 });
 
 todosRouter.post("/create-todo", (req: Request, res: Response) => {
+  // title
+  // description
+  // priority : High, Medium, Low
+  // isCompleted : true
+
   const { title, body } = req.body;
   console.log(title, body);
   res.send("Creating todo");

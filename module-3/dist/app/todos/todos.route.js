@@ -19,6 +19,10 @@ exports.todosRouter.get("/", (req, res) => {
     });
 });
 exports.todosRouter.post("/create-todo", (req, res) => {
+    // title
+    // description
+    // priority : High, Medium, Low
+    // isCompleted : true
     const { title, body } = req.body;
     console.log(title, body);
     res.send("Creating todo");
