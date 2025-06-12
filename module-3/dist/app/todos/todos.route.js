@@ -53,8 +53,13 @@ exports.todosRouter.put("/update-todo/:title", (req, res) => {
     console.log(title, body);
     res.send("Creating todo");
 });
-exports.todosRouter.delete("/delete-todo/:title", (req, res) => {
-    const { title, body } = req.body;
-    console.log(title, body);
-    res.send("Creating todo");
-});
+exports.todosRouter.delete("/delete-todo/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const db = yield mongodb_1.client.db("todosDB");
+    const collection = yield db.collection("todos");
+    const data = yield collection.deleteOne({ _id: new mongodb_2.ObjectId(id) });
+    console.log(data);
+    res.json({
+        message: "Deleted Successfully",
+    });
+}));

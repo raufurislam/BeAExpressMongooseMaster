@@ -48,8 +48,14 @@ todosRouter.put("/update-todo/:title", (req: Request, res: Response) => {
   res.send("Creating todo");
 });
 
-todosRouter.delete("/delete-todo/:title", (req: Request, res: Response) => {
-  const { title, body } = req.body;
-  console.log(title, body);
-  res.send("Creating todo");
+todosRouter.delete("/delete-todo/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const db = await client.db("todosDB");
+  const collection = await db.collection("todos");
+
+  const data = await collection.deleteOne({ _id: new ObjectId(id) });
+  console.log(data);
+  res.json({
+    message: "Deleted Successfully",
+  });
 });
