@@ -17,11 +17,36 @@ app.get(
     // res.send("Inside middleware");
     next();
   },
-  (req: Request, res: Response) => {
-    res.send("Welcome to Todos App");
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.send("Welcome to Todos App");
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
+app.get("/error", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.send("welcome to error world");
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  if (error) {
+    console.log("error", error);
+    res.status(400).json({
+      message: "Something went wrong from global error handler",
+      error,
+    });
+  }
+});
 export default app;
 
 // [app]-[express.json()]-[todosRouter]-[Root Route "/"]-[GET "/todos"]-[POST Create ToDo]
