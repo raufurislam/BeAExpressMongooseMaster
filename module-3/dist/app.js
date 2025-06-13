@@ -11,8 +11,11 @@ app.use(express_1.default.json());
 const userRouter = express_1.default.Router();
 app.use("/todos", todos_route_1.todosRouter); // organize code and splitting the route (todos.route.ts)
 app.use("/users", userRouter);
-app.get("/", (req, res) => {
-    console.log(req.url, req.method);
+app.get("/", (req, res, next) => {
+    console.log({ url: req.url, method: req.method, header: req.header });
+    // res.send("Inside middleware");
+    next();
+}, (req, res) => {
     res.send("Welcome to Todos App");
 });
 exports.default = app;

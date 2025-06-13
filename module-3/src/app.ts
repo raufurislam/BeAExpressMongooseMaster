@@ -1,5 +1,5 @@
 // app.ts
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import { todosRouter } from "./app/todos/todos.route";
 
 const app: Application = express();
@@ -10,10 +10,17 @@ const userRouter = express.Router();
 app.use("/todos", todosRouter); // organize code and splitting the route (todos.route.ts)
 app.use("/users", userRouter);
 
-app.get("/", (req: Request, res: Response) => {
-  console.log(req.url, req.method);
-  res.send("Welcome to Todos App");
-});
+app.get(
+  "/",
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log({ url: req.url, method: req.method, header: req.header });
+    // res.send("Inside middleware");
+    next();
+  },
+  (req: Request, res: Response) => {
+    res.send("Welcome to Todos App");
+  }
+);
 
 export default app;
 
