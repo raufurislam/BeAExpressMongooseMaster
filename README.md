@@ -171,23 +171,8 @@ Used to create scope and encapsulate logic:
 
 ---
 
-## 🔮 What’s Next?
-
-> Keep this section short until future additions are made.
-
-- Working with the file system (`fs` module)
-- Creating HTTP servers
-- Learning Express.js framework
-- Debugging and error handling
-- Working with async/await and Promises
-
----
-
-Got it! You want the README to be **cleaner, more practical, and easier to come back to when needed** — like a **personal note with headings**, short code references, and comments on _where and why_ something is used.
-
-Here’s a more **summarized, structured, and recall-friendly** version of your README with corrected notes:
-
----
+<br>
+<br>
 
 # `📘 Node.js Core Modules & Basic Todo App – Summary Notes`
 
@@ -394,5 +379,221 @@ req.on("end", () => {
 - Use `process.argv` for CLI input
 - Wrap async code in `try-catch` when using Promises
 - Avoid nested callbacks → consider using Promises in future
+
+---
+
+---
+
+---
+
+---
+
+---
+
+# **`📘 Node.js Core Modules & Basic Todo App – Summary Notes`**
+
+## 🧩 ToDo API with Express, TypeScript & MongoDB
+
+A minimal but structured ToDo REST API built using **Express.js**, **TypeScript**, and **MongoDB** without using Mongoose. This project is ideal for learning core concepts of API development, route handling, error management, and connecting to a NoSQL database natively.
+
+---
+
+## ✅ Project Setup
+
+```bash
+npm init -y
+npm i express
+npm i -D typescript @types/express nodemon
+tsc --init
+```
+
+**Optional:**
+
+```bash
+npm install -g nodemon
+```
+
+### TypeScript Watch Mode
+
+```bash
+tsc -w
+```
+
+### package.json Script
+
+```json
+"scripts": {
+  "dev": "nodemon ./dist/server.js"
+}
+```
+
+Run the server:
+
+```bash
+npm run dev
+```
+
+---
+
+## 📁 Folder Structure
+
+```
+module-3/
+├── db/
+│   └── todo.json              # Sample data (if needed)
+├── dist/                      # Compiled JS output
+│   ├── app/
+│   ├── config/
+│   ├── app.js
+│   └── server.js
+├── src/
+│   ├── app/
+│   │   └── todos/
+│   │       └── todos.route.ts   # ToDo Routes
+│   └── config/
+│       └── mongodb.ts           # MongoDB client connection
+├── app.ts                      # Express app & middleware
+├── server.ts                   # Main entry: connects DB & starts server
+├── tsconfig.json
+```
+
+---
+
+## 🔥 Features Implemented
+
+### 1. Express App & Middleware
+
+- `express.json()` for parsing requests
+- Custom middleware logs request data
+
+```ts
+app.use(express.json());
+
+app.get("/", (req, res, next) => {
+  console.log({ url: req.url, method: req.method, header: req.headers });
+  next();
+});
+```
+
+---
+
+### 2. RESTful Routing
+
+Modular routing via `todos.route.ts`:
+
+```ts
+app.use("/todos", todosRouter);
+```
+
+#### Route Endpoints
+
+| Method | Endpoint                 | Description       |
+| ------ | ------------------------ | ----------------- |
+| GET    | `/todos/`                | Get all todos     |
+| POST   | `/todos/create-todo`     | Add a new todo    |
+| GET    | `/todos/:id`             | Get a single todo |
+| PUT    | `/todos/update-todo/:id` | Update a todo     |
+| DELETE | `/todos/delete-todo/:id` | Delete a todo     |
+
+---
+
+### 3. MongoDB Native Client
+
+- File: `mongodb.ts`
+
+```ts
+export const client = new MongoClient(uri);
+```
+
+Connected inside `server.ts`:
+
+```ts
+await client.connect();
+```
+
+---
+
+### 4. Query & Params Support
+
+Supports:
+
+- Query: `/todos?title=task&body=learning`
+- Param: `/todos/:id`
+
+Handles `ObjectId` conversion as needed.
+
+---
+
+### 5. Error Handling
+
+✅ 404 Handler:
+
+```ts
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+```
+
+✅ Global Error Handler:
+
+```ts
+app.use((error, req, res, next) => {
+  res.status(400).json({
+    message: "Something went wrong from global error handler",
+    error,
+  });
+});
+```
+
+---
+
+## 🧠 Key Concepts Practiced
+
+| Topic                       | ✅ Status |
+| --------------------------- | --------- |
+| Express Server Setup        | ✅ Done   |
+| Middleware Usage            | ✅ Done   |
+| Route Params & Queries      | ✅ Done   |
+| Modular Route Splitting     | ✅ Done   |
+| MongoDB Native Integration  | ✅ Done   |
+| RESTful CRUD Operations     | ✅ Done   |
+| 404 & Global Error Handling | ✅ Done   |
+
+---
+
+## 📦 Tech Stack
+
+| Tool       | Description               |
+| ---------- | ------------------------- |
+| Express.js | Web framework for Node.js |
+| TypeScript | Type-safe JavaScript      |
+| MongoDB    | NoSQL Database            |
+| Nodemon    | Dev-time server reloader  |
+| Postman    | API testing tool          |
+
+---
+
+## 📌 Final Notes
+
+- This is a **foundation-level setup** to help you **master raw Express + TypeScript + MongoDB** integration.
+- No use of Mongoose makes the DB logic more transparent and raw.
+- Modular file structure is **scalable for future features**, like controllers, services, or middlewares.
+- Future improvements can include:
+
+  - `dotenv` for environment variables
+  - CORS and cookie-parser for frontend integration
+  - JWT Auth & Validation Middleware
+
+---
+
+## 🙋‍♂️ Author
+
+**Raufur Islam Nayem**
+Junior Full Stack Developer
+
+📧 [raufurislam@gmail.com](mailto:raufurislam@gmail.com)
+🌐 [Portfolio](https://raufurislam-portfolio.web.app)
+🐱 [GitHub](https://github.com/raufurislam)
+📱 +8801648068834
 
 ---

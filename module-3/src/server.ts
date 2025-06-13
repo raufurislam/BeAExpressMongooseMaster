@@ -1,3 +1,4 @@
+// server.ts
 import { MongoClient, ServerApiVersion } from "mongodb";
 import app from "./app";
 import { client } from "./config/mongodb";
