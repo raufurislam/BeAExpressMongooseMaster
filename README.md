@@ -586,49 +586,52 @@ app.use((error, req, res, next) => {
 
 # **`📘 In-Depth Exploration of MongoDB Queries`**
 
----
-
-## 🧩 Setup
-
-### 🔹 Download Tools
-
-- [ ] **MongoDB Compass** (GUI Tool)
-- [ ] **MongoDB Shell** (CLI Tool)
-
-### 🔹 Set Mongo Shell Path
-
-1. Copy this path: `C:\Program Files\MongoDB\Server\8.0\bin`
-2. Set it in the **Environment Variable** → `Path`
-
-> ✅ After this setup, you can use `mongod` and `mongosh` directly in your command prompt.
-
-### 🔹 Check Version
-
-```bash
-mongod --version
-mongosh
-```
+> A practical and in-depth guide to learning MongoDB queries using the shell, Compass, and GUI tools like NoSQL Booster.
 
 ---
 
-## 📂 Basic Database Commands
+## 🛠 Installation & Setup
+
+### Tools to Install
+
+- **MongoDB Compass** (GUI)
+- **MongoDB Shell** (mongosh)
+
+### Set Up Mongo Shell Path (Windows)
+
+1. Copy the path:
+
+   ```
+   C:\Program Files\MongoDB\Server\8.0\bin
+   ```
+
+2. Add it to your system environment variables under `PATH`.
+3. Restart terminal and verify:
+
+   ```bash
+   mongod --version
+   mongosh
+   ```
+
+---
+
+## 🧪 Initial Commands
 
 ```js
 show dbs
 use practise
 db.createCollection("test")
-db.getCollection("test").insertOne({ name: "NLWD" })
-db.getCollection("test").find()
+db.test.insertOne({ name: "NLWD" })
+db.test.find()
 ```
-
-> 🖥️ GUI Option: You can also use **Studio 3T** or **SQLBooster** as alternatives to Compass.
 
 ---
 
-## 📥 Insert Documents
+## 📝 Insertion
 
 ```js
 db.test.insertOne({ name: "Something" });
+
 db.test.insertMany([
   { name: "Complete web development" },
   { name: "Next level web development" },
@@ -637,57 +640,58 @@ db.test.insertMany([
 
 ---
 
-## 📤 Read (Find) Queries
+## 🔍 Find & Filter
+
+### Field & Projection
 
 ```js
-// Find by ID
-db.test.findOne({ _id: ObjectId("6406ad63fc13ae5a40000066") });
-
-// Field filtering
 db.test.find({ gender: "Female" }, { gender: 1 });
-
-// Projection
 db.test.find({ gender: { $eq: "Female" } }).project({ gender: 1 });
 db.test.find({ age: { $ne: 15 } }).project({ age: 1 });
+db.test
+  .find({ age: { $gt: 15 } })
+  .project({ age: 1 })
+  .sort({ age: 1 });
+```
 
-// Comparisons
-// $gt, $gte, $lt, $lte
-db.test.find({ age: { $gt: 15 } }).sort({ age: 1 });
-db.test.find({ age: { $lte: 18 } }).sort({ age: -1 });
+### Comparison Operators
 
-// Combine conditions (Implicit AND)
+```js
+$eq, $ne, $gt, $gte, $lt, $lte;
+```
+
+### Ranges
+
+```js
 db.test
   .find({ gender: "Female", age: { $gte: 18, $lte: 30 } })
   .sort({ age: -1 });
-
-// $in, $nin
 db.test.find({ age: { $in: [18, 20, 22] } });
-db.test.find({ age: { $nin: [20, 22] } });
+db.test.find({ age: { $nin: [18, 20, 22] } });
 ```
 
 ---
 
-## ⚙️ Logical Operators
+## 🔗 Logical Operators
 
 ```js
-// $and (explicit)
-db.test
-  .find({
-    $and: [{ gender: "Female" }, { age: { $gt: 15 } }, { age: { $lt: 30 } }],
-  })
-  .project({ name: 1, age: 1 });
+$and, $or, $not, $nor;
+```
 
-// $or
-db.test
-  .find({
-    $or: [{ interests: "Travelling" }, { interests: "Cooking" }],
-  })
-  .project({ name: 1, interests: 1 });
+### Examples
 
-// $not
-// Only works inside operators
+```js
+// Explicit AND
+db.test.find({
+  $and: [{ gender: "Female" }, { age: { $gt: 15 } }, { age: { $lt: 30 } }],
+});
 
-// $nor (negate multiple)
+// OR
+db.test.find({
+  $or: [{ interests: "Travelling" }, { interests: "Cooking" }],
+});
+
+// NOR
 db.test.find({
   $nor: [{ gender: "Female" }, { age: { $lt: 18 } }],
 });
@@ -695,95 +699,114 @@ db.test.find({
 
 ---
 
-## 🧬 Element Queries
+## 🧱 Element Queries
 
 ```js
 db.test.find({ phone: { $exists: true } });
-db.test.find({ company: { $exists: false } });
 db.test.find({ age: { $type: "string" } });
+```
+
+---
+
+## 📚 Array Queries
+
+```js
+// Match all elements
+db.test.find({ interests: { $all: ["Gardening", "Gaming", "Cooking"] } });
+
+// Match specific index
 db.test.find({ "interests.2": "Cooking" });
+
+// Embedded object
+// With skills array of objects:
+db.test.find({ "skills.name": { $in: ["JAVASCRIPT", "PYTHON"] } });
 ```
 
 ---
 
-## 🔁 Array Queries
+## ✏️ Update Operators
+
+### Field Updates
 
 ```js
-// $all
-db.test.find({
-  interests: { $all: ["Gardening", "Gaming", "Cooking"] },
-});
-
-// Nested array query
-db.test
-  .find({
-    "skills.name": { $in: ["JAVASCRIPT", "PYTHON"] },
-  })
-  .project({ name: 1, "skills.name": 1 });
+db.test.updateOne({ _id: ObjectId("...") }, { $set: { interests: "Gaming" } });
 ```
 
----
-
-## 🔧 Update Queries
-
-### 🧱 Field Updates
+### Array Updates
 
 ```js
+// Add single without duplicates
 db.test.updateOne(
-  { _id: ObjectId("6406ad63fc13ae5a40000065") },
-  { $set: { interests: "Gaming" } }
-);
-```
-
-### 📚 Array Updates
-
-```js
-// Add single non-duplicate value
-db.test.updateOne(
-  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { _id: ObjectId("...") },
   { $addToSet: { interests: "Gaming" } }
 );
 
-// Add multiple values
+// Add multiple
 db.test.updateOne(
-  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { _id: ObjectId("...") },
   { $addToSet: { interests: { $each: ["Cooking", "Driving"] } } }
 );
+```
 
-// Remove fields
-$unset;
-$pop;
-$pull;
-$pullAll;
+### Unset, Pop, Pull
 
-// Update nested fields
+```js
+db.test.updateOne({ _id: ObjectId("...") }, { $unset: { birthday: "" } });
+
+db.test.updateOne(
+  { _id: ObjectId("...") },
+  { $pull: { languages: "Catalan" } }
+);
+
+db.test.updateOne({ _id: ObjectId("...") }, { $pop: { friends: -1 } });
+```
+
+### Nested Field Updates
+
+```js
 db.test.updateOne(
   { _id: ObjectId("..."), "education.institute": "East West University" },
   { $set: { "education.$.institute": "Brac" } }
 );
-
-// Increment field
-db.test.updateOne({ _id: ObjectId("...") }, { $inc: { age: 2 } });
 ```
 
 ---
 
-## ❌ Delete and Drop
+## ❌ Delete / Drop
 
 ```js
 db.test.deleteOne({ _id: ObjectId("...") });
-db.createCollection("post");
-db.post.insertOne({ name: "Prisma" });
 db.posts.drop();
 ```
 
 ---
 
-## 🔗 Always Follow the Docs
+## 📎 Quick Commands Reference
 
-📚 [MongoDB Official Query Docs](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/)
+| Category       | Examples / Commands                                    |
+| -------------- | ------------------------------------------------------ |
+| Insert         | `insertOne`, `insertMany`                              |
+| Find           | `find`, `findOne`, `.project()`                        |
+| Filters        | `$eq`, `$ne`, `$gt`, `$lt`, `$in`, `$nin`              |
+| Logic          | `$and`, `$or`, `$not`, `$nor`                          |
+| Array Queries  | `$all`, `$elemMatch`, index access                     |
+| Element Checks | `$exists`, `$type`                                     |
+| Update         | `$set`, `$addToSet`, `$unset`, `$pull`, `$pop`, `$inc` |
+| Delete / Drop  | `deleteOne`, `.drop()`                                 |
 
-> ℹ️ Important: Always validate with the MongoDB shell version and field structure before applying updates.
+---
+
+## 📘 Learn More
+
+- Official Docs: [https://www.mongodb.com/docs/manual/reference/operator/query-comparison/](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/)
+- Tools: MongoDB Compass, NoSQL Booster
+- Practice using Mongo Shell or GUI apps
+
+---
+
+**🧠 Tip:** Always experiment and refer to documentation for deeper insights.
+
+Let me know if you need a printable cheatsheet or Notion version!
 
 <br>
 <br>
