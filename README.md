@@ -380,15 +380,9 @@ req.on("end", () => {
 - Wrap async code in `try-catch` when using Promises
 - Avoid nested callbacks → consider using Promises in future
 
----
-
----
-
----
-
----
-
----
+<br>
+<br>
+<br>
 
 # **`📘 Node.js Core Modules & Basic Todo App – Summary Notes`**
 
@@ -586,6 +580,214 @@ app.use((error, req, res, next) => {
 
 ---
 
+<br>
+<br>
+<br>
+
+# **`📘 In-Depth Exploration of MongoDB Queries`**
+
+---
+
+## 🧩 Setup
+
+### 🔹 Download Tools
+
+- [ ] **MongoDB Compass** (GUI Tool)
+- [ ] **MongoDB Shell** (CLI Tool)
+
+### 🔹 Set Mongo Shell Path
+
+1. Copy this path: `C:\Program Files\MongoDB\Server\8.0\bin`
+2. Set it in the **Environment Variable** → `Path`
+
+> ✅ After this setup, you can use `mongod` and `mongosh` directly in your command prompt.
+
+### 🔹 Check Version
+
+```bash
+mongod --version
+mongosh
+```
+
+---
+
+## 📂 Basic Database Commands
+
+```js
+show dbs
+use practise
+db.createCollection("test")
+db.getCollection("test").insertOne({ name: "NLWD" })
+db.getCollection("test").find()
+```
+
+> 🖥️ GUI Option: You can also use **Studio 3T** or **SQLBooster** as alternatives to Compass.
+
+---
+
+## 📥 Insert Documents
+
+```js
+db.test.insertOne({ name: "Something" });
+db.test.insertMany([
+  { name: "Complete web development" },
+  { name: "Next level web development" },
+]);
+```
+
+---
+
+## 📤 Read (Find) Queries
+
+```js
+// Find by ID
+db.test.findOne({ _id: ObjectId("6406ad63fc13ae5a40000066") });
+
+// Field filtering
+db.test.find({ gender: "Female" }, { gender: 1 });
+
+// Projection
+db.test.find({ gender: { $eq: "Female" } }).project({ gender: 1 });
+db.test.find({ age: { $ne: 15 } }).project({ age: 1 });
+
+// Comparisons
+// $gt, $gte, $lt, $lte
+db.test.find({ age: { $gt: 15 } }).sort({ age: 1 });
+db.test.find({ age: { $lte: 18 } }).sort({ age: -1 });
+
+// Combine conditions (Implicit AND)
+db.test
+  .find({ gender: "Female", age: { $gte: 18, $lte: 30 } })
+  .sort({ age: -1 });
+
+// $in, $nin
+db.test.find({ age: { $in: [18, 20, 22] } });
+db.test.find({ age: { $nin: [20, 22] } });
+```
+
+---
+
+## ⚙️ Logical Operators
+
+```js
+// $and (explicit)
+db.test
+  .find({
+    $and: [{ gender: "Female" }, { age: { $gt: 15 } }, { age: { $lt: 30 } }],
+  })
+  .project({ name: 1, age: 1 });
+
+// $or
+db.test
+  .find({
+    $or: [{ interests: "Travelling" }, { interests: "Cooking" }],
+  })
+  .project({ name: 1, interests: 1 });
+
+// $not
+// Only works inside operators
+
+// $nor (negate multiple)
+db.test.find({
+  $nor: [{ gender: "Female" }, { age: { $lt: 18 } }],
+});
+```
+
+---
+
+## 🧬 Element Queries
+
+```js
+db.test.find({ phone: { $exists: true } });
+db.test.find({ company: { $exists: false } });
+db.test.find({ age: { $type: "string" } });
+db.test.find({ "interests.2": "Cooking" });
+```
+
+---
+
+## 🔁 Array Queries
+
+```js
+// $all
+db.test.find({
+  interests: { $all: ["Gardening", "Gaming", "Cooking"] },
+});
+
+// Nested array query
+db.test
+  .find({
+    "skills.name": { $in: ["JAVASCRIPT", "PYTHON"] },
+  })
+  .project({ name: 1, "skills.name": 1 });
+```
+
+---
+
+## 🔧 Update Queries
+
+### 🧱 Field Updates
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $set: { interests: "Gaming" } }
+);
+```
+
+### 📚 Array Updates
+
+```js
+// Add single non-duplicate value
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $addToSet: { interests: "Gaming" } }
+);
+
+// Add multiple values
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $addToSet: { interests: { $each: ["Cooking", "Driving"] } } }
+);
+
+// Remove fields
+$unset;
+$pop;
+$pull;
+$pullAll;
+
+// Update nested fields
+db.test.updateOne(
+  { _id: ObjectId("..."), "education.institute": "East West University" },
+  { $set: { "education.$.institute": "Brac" } }
+);
+
+// Increment field
+db.test.updateOne({ _id: ObjectId("...") }, { $inc: { age: 2 } });
+```
+
+---
+
+## ❌ Delete and Drop
+
+```js
+db.test.deleteOne({ _id: ObjectId("...") });
+db.createCollection("post");
+db.post.insertOne({ name: "Prisma" });
+db.posts.drop();
+```
+
+---
+
+## 🔗 Always Follow the Docs
+
+📚 [MongoDB Official Query Docs](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/)
+
+> ℹ️ Important: Always validate with the MongoDB shell version and field structure before applying updates.
+
+<br>
+<br>
+
 ## 🙋‍♂️ Author
 
 **Raufur Islam Nayem**
@@ -595,5 +797,3 @@ Junior Full Stack Developer
 🌐 [Portfolio](https://raufurislam-portfolio.web.app)
 🐱 [GitHub](https://github.com/raufurislam)
 📱 +8801648068834
-
----
