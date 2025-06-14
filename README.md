@@ -174,7 +174,7 @@ Used to create scope and encapsulate logic:
 <br>
 <br>
 
-# `📘 Node.js Core Modules & Basic Todo App – Summary Notes`
+# `📘 Node.js Core Modules & Basic Todo App`
 
 > A concise reference for everything I’ve learned and practiced in Node.js so far.
 
@@ -384,7 +384,7 @@ req.on("end", () => {
 <br>
 <br>
 
-# **`📘 Node.js Core Modules & Basic Todo App – Summary Notes`**
+# **`📘 Node.js Core Modules & Basic Todo App`**
 
 ## 🧩 ToDo API with Express, TypeScript & MongoDB
 
