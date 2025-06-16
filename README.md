@@ -811,6 +811,243 @@ Let me know if you need a printable cheatsheet or Notion version!
 <br>
 <br>
 
+# **`📘 Mastering MongoDB Aggregation & Indexing`**
+
+> **Note-style format:** This README is meant for hands-on learners who want quick reference to MongoDB’s core aggregation and indexing concepts, syntax, and use cases. Ideal for interview prep, revision, and fast prototyping.
+
+---
+
+## 🚀 Getting Started with Aggregation
+
+The **aggregation framework** processes data records and returns computed results.
+Aggregation operations group values, transform structure, filter, and more.
+
+### 🔧 Key Stages in a Pipeline
+
+- `$match`: Filter documents
+- `$project`: Reshape documents (include/exclude fields)
+- `$addFields`: Add new fields
+- `$out` / `$merge`: Write aggregation output to collections
+- `$group`: Group data and compute values like `$sum`, `$avg`
+- `$unwind`: Deconstruct arrays
+- `$bucket`: Group documents into defined ranges
+- `$sort`, `$limit`: Sort and limit results
+- `$facet`: Run multiple pipelines in one query
+- `$lookup`: Perform JOIN-like operations
+
+---
+
+## 💡 Basic Aggregation Example
+
+```js
+// Match + Project
+
+db.test.aggregate([
+  { $match: { gender: "Male", age: { $lt: 30 } } },
+  { $project: { name: 1, gender: 1, age: 1 } },
+]);
+```
+
+---
+
+## 🧱 Multistage Pipeline
+
+```js
+// Add new fields and export results
+
+db.test.aggregate([
+  { $match: { gender: "Female" } },
+  { $addFields: { course: "Level-2", platform: "Programming Hero" } },
+  // { $out: "course-students" },
+  // { $merge: "test" }
+]);
+```
+
+---
+
+## 📊 Using \$group
+
+```js
+// Count users per gender
+
+db.test.aggregate([{ $group: { _id: "$gender", count: { $sum: 1 } } }]);
+```
+
+```js
+// Group by country and extract info
+
+db.test.aggregate([
+  {
+    $group: {
+      _id: "$address.country",
+      count: { $sum: 1 },
+      fullDoc: { $push: "$$ROOT" },
+    },
+  },
+  {
+    $project: {
+      "fullDoc.name": 1,
+      "fullDoc.email": 1,
+    },
+  },
+]);
+```
+
+```js
+// Salary summary
+
+db.test.aggregate([
+  {
+    $group: {
+      _id: null,
+      total: { $sum: "$salary" },
+      avg: { $avg: "$salary" },
+      max: { $max: "$salary" },
+      min: { $min: "$salary" },
+    },
+  },
+  {
+    $project: {
+      total: 1,
+      avg: 1,
+      range: { $subtract: ["$max", "$min"] },
+    },
+  },
+]);
+```
+
+---
+
+## 🌀 \$unwind and Array Grouping
+
+```js
+// Count friends
+
+db.test.aggregate([
+  { $unwind: "$friends" },
+  { $group: { _id: "$friends", count: { $sum: 1 } } },
+]);
+```
+
+---
+
+## 🪣 \$bucket Example
+
+```js
+db.test.aggregate([
+  {
+    $bucket: {
+      groupBy: "$age",
+      boundaries: [20, 40, 60, 80],
+      default: "80+",
+      output: {
+        count: { $sum: 1 },
+        docs: { $push: "$$ROOT" },
+      },
+    },
+  },
+  { $sort: { count: -1 } },
+  { $limit: 2 },
+]);
+```
+
+---
+
+## 🧩 \$facet (Multi-pipeline Aggregation)
+
+```js
+db.test.aggregate([
+  {
+    $facet: {
+      friends: [
+        { $unwind: "$friends" },
+        { $group: { _id: "$friends", count: { $sum: 1 } } },
+      ],
+      education: [
+        { $unwind: "$education" },
+        { $group: { _id: "$education", count: { $sum: 1 } } },
+      ],
+      skills: [
+        { $unwind: "$skills" },
+        { $group: { _id: "$skills", count: { $sum: 1 } } },
+      ],
+    },
+  },
+]);
+```
+
+---
+
+## 🔗 \$lookup (JOIN)
+
+```js
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "test",
+      localField: "userId",
+      foreignField: "_id",
+      as: "user",
+    },
+  },
+]);
+```
+
+---
+
+## 📌 Indexing in MongoDB
+
+### 🔍 What is Indexing?
+
+- MongoDB automatically creates `_id` index.
+- Improves query performance.
+- Without index → full collection scan (COLLSCAN)
+- With index → index scan (IXSCAN)
+
+```js
+// Check performance
+
+db.test.find({ _id: ObjectId("...") }).explain("executionStats");
+```
+
+### 🧠 Creating Index
+
+```js
+// Single index
+
+db.getCollection("massive-data").createIndex({ email: 1 });
+
+// Compound index
+
+db.getCollection("massive-data").createIndex({ gender: -1, age: 1 });
+
+// Text index
+
+db.getCollection("massive-data").createIndex({ about: "text" });
+
+db.getCollection("massive-data")
+  .find({
+    $text: { $search: "dolor" },
+  })
+  .project({ about: 1 });
+```
+
+---
+
+## 📚 Recommended Docs
+
+- Aggregation Stages Reference:
+  👉 [https://www.mongodb.com/docs/manual/reference/operator/aggregation/](https://www.mongodb.com/docs/manual/reference/operator/aggregation/)
+- Studio 3T Guide:
+  👉 [https://studio3t.com/knowledge-base/articles/mongodb-aggregation-framework/](https://studio3t.com/knowledge-base/articles/mongodb-aggregation-framework/)
+
+---
+
+Happy Aggregating! 💪🧮
+
+<br>
+<br>
+
 ## 🙋‍♂️ Author
 
 **Raufur Islam Nayem**
