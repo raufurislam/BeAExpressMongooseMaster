@@ -5,24 +5,29 @@ const app: Application = express();
 
 app.use(express.json());
 
-const noteSchema = new Schema({
-  title: { type: String, require: true, trim: true },
-  content: { type: String, default: "" },
-  category: {
-    type: String,
-    enum: ["personal", "work", "study", "other"],
-    default: "personal",
+const noteSchema = new Schema(
+  {
+    title: { type: String, require: true, trim: true },
+    content: { type: String, default: "" },
+    category: {
+      type: String,
+      enum: ["personal", "work", "study", "other"],
+      default: "personal",
+    },
+    pinned: {
+      type: Boolean,
+      default: false,
+    }, // type syntax in short we can use just Boolean but best is use full syntax
+    tags: {
+      label: { type: String, require: true },
+      color: { type: String, default: "gray" },
+    }, // object and type
   },
-  pinned: {
-    type: Boolean,
-    default: false,
-  }, // type syntax in short we can use just Boolean but best is use full syntax
-  tags: {
-    label: { type: String, require: true },
-    color: { type: String, default: "gray" },
-  },
-  // object and type
-});
+  {
+    versionKey: false,
+    timestamps: true,
+  }
+);
 
 const Note = model("Note", noteSchema);
 
@@ -88,7 +93,7 @@ app.delete("/notes/:noteId", async (req: Request, res: Response) => {
   });
 });
 
-// Update Note
+// Update note
 app.patch("/notes/:noteId", async (req: Request, res: Response) => {
   const noteId = req.params.noteId;
   const updatedBody = req.body;
