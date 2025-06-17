@@ -26,6 +26,7 @@ const noteSchema = new Schema({
 
 const Note = model("Note", noteSchema);
 
+// Create note
 app.post("/notes/create-note", async (req: Request, res: Response) => {
   const body = req.body;
 
@@ -49,6 +50,7 @@ app.post("/notes/create-note", async (req: Request, res: Response) => {
   });
 });
 
+// Get all notes
 app.get("/notes", async (req: Request, res: Response) => {
   const notes = await Note.find();
 
@@ -56,6 +58,18 @@ app.get("/notes", async (req: Request, res: Response) => {
     success: true,
     message: "Note created successfully",
     note: notes,
+  });
+});
+
+// Get single note
+app.get("/notes/:noteId", async (req: Request, res: Response) => {
+  const noteId = req.params.noteId;
+  const note = await Note.findById(noteId);
+
+  res.status(201).json({
+    success: true,
+    message: "Note created successfully",
+    note: note,
   });
 });
 
