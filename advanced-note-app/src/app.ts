@@ -56,7 +56,7 @@ app.get("/notes", async (req: Request, res: Response) => {
 
   res.status(201).json({
     success: true,
-    message: "Note created successfully",
+    message: "Get all note",
     note: notes,
   });
 });
@@ -65,13 +65,29 @@ app.get("/notes", async (req: Request, res: Response) => {
 app.get("/notes/:noteId", async (req: Request, res: Response) => {
   const noteId = req.params.noteId;
   const note = await Note.findById(noteId);
+  // const note2 = await Note.find({ _id: noteId });
 
   res.status(201).json({
     success: true,
-    message: "Note created successfully",
+    message: "Get a single note",
     note: note,
   });
 });
+
+app.delete("/notes/:noteId", async (req: Request, res: Response) => {
+  const noteId = req.params.noteId;
+  const note = await Note.findByIdAndDelete(noteId);
+  // const note1 = await Note.findOneAndDelete({ _id: noteId });
+  // const note2 = await Note.deleteOne({ _id: noteId });
+
+  res.status(201).json({
+    success: true,
+    message: `${noteId} deleted successfully `,
+    note: note,
+  });
+});
+
+//
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Note App");
