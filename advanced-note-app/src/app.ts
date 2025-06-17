@@ -3,6 +3,8 @@ import { model, Schema } from "mongoose";
 
 const app: Application = express();
 
+app.use(express.json());
+
 const noteSchema = new Schema({
   title: { type: String, require: true, trim: true },
   content: { type: String, default: "" },
@@ -16,28 +18,44 @@ const noteSchema = new Schema({
     default: false,
   }, // type syntax in short we can use just Boolean but best is use full syntax
   tags: {
-    label: { type: String, required: true },
+    label: { type: String, require: true },
     color: { type: String, default: "gray" },
-  }, // object and type
+  },
+  // object and type
 });
 
 const Note = model("Note", noteSchema);
 
-app.post("/create-note", async (req: Request, res: Response) => {
-  //   Approach - 1 of creating a data
-  const myNote = new Note({
-    title: "Learning Mongodb",
-    tags: {
-      label: "database",
-    },
-  });
+app.post("/notes/create-note", async (req: Request, res: Response) => {
+  const body = req.body;
 
-  await myNote.save();
+  // Approach - 1 of creating a data
+  // const myNote = new Note({
+  //   title: "Learning Node",
+  //   // tags: {
+  //   //     label: "database"
+  //   // }
+  // });
+
+  // await myNote.save();
+
+  //Approach - 2
+  const note = await Note.create(body);
 
   res.status(201).json({
     success: true,
     message: "Note created successfully",
-    note: myNote,
+    note,
+  });
+});
+
+app.get("/notes", async (req: Request, res: Response) => {
+  const notes = await Note.find();
+
+  res.status(201).json({
+    success: true,
+    message: "Note created successfully",
+    note: notes,
   });
 });
 
