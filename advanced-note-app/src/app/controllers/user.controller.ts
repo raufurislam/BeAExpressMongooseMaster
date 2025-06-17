@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { User } from "../models/user.model";
+import app from "../../app";
 
 export const usersRoute = express.Router();
 
@@ -20,5 +21,39 @@ usersRoute.get("/", async (req: Request, res: Response) => {
     success: true,
     message: "Get all users",
     users,
+  });
+});
+
+usersRoute.get("/:userId", async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const user = await User.findById(userId);
+
+  res.status(201).json({
+    success: true,
+    message: `${userId} user found`,
+    user,
+  });
+});
+
+usersRoute.delete("/:usersId", async (req: Request, res: Response) => {
+  const userId = req.params.usersId;
+  const user = await User.findByIdAndDelete(userId);
+
+  res.status(200).json({
+    success: true,
+    message: `${userId} user deleted successfully`,
+    user: user,
+  });
+});
+
+usersRoute.patch("/:userId", async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const updatedBody = req.body;
+  const user = await User.findByIdAndUpdate(userId, updatedBody, { new: true });
+
+  res.status(200).json({
+    success: true,
+    message: `${userId} is being successfully updated`,
+    user: user,
   });
 });
