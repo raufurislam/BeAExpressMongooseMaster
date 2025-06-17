@@ -74,6 +74,7 @@ app.get("/notes/:noteId", async (req: Request, res: Response) => {
   });
 });
 
+// Delete note
 app.delete("/notes/:noteId", async (req: Request, res: Response) => {
   const noteId = req.params.noteId;
   const note = await Note.findByIdAndDelete(noteId);
@@ -83,6 +84,19 @@ app.delete("/notes/:noteId", async (req: Request, res: Response) => {
   res.status(201).json({
     success: true,
     message: `${noteId} deleted successfully `,
+    note: note,
+  });
+});
+
+// Update Note
+app.patch("/notes/:noteId", async (req: Request, res: Response) => {
+  const noteId = req.params.noteId;
+  const updatedBody = req.body;
+  const note = await Note.findByIdAndUpdate(noteId, updatedBody, { new: true });
+
+  res.status(201).json({
+    success: true,
+    message: `${noteId} is being successfully updated`,
     note: note,
   });
 });
