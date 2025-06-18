@@ -1,4 +1,20 @@
-# **`Node.js Learning Guide`**
+# 📖 Be A Express Mongoose Master
+
+> This guide is a comprehensive journey through the essential backend technologies every modern developer should master. It starts with the **fundamentals of Node.js**, dives deep into **Node.js core modules** by building a basic ToDo app, and then explores the **foundation of Express.js** for building scalable APIs. You'll also gain hands-on experience with **MongoDB queries**, move into powerful **aggregation and indexing techniques**, and finally master **Mongoose** including advanced topics like **validation, custom methods, and virtuals** using **TypeScript and Express**. Whether you're a beginner or brushing up your skills, this curated roadmap will help you build a solid foundation for full-stack development.
+
+## Table of Contents
+
+- [The Fundamental of Node.js](#the-fundamental-of-nodejs)
+- [Node.js Core Modules and Basic Todo App](#nodejs-core-modules-and-basic-todo-app)
+- [Mastering The Foundation Of Express](#mastering-the-foundation-of-express)
+- [In-Depth Exploration of MongoDB Queries](#in-depth-exploration-of-mongodb-queries)
+- [Mastering MongoDB Aggregation and Indexing](#mastering-mongodb-aggregation-and-indexing)
+- [Mastering Core Concepts of Mongoose with TypeScript and Express](#mastering-core-concepts-of-mongoose-with-typescript-and-express)
+
+<br>
+<br>
+
+# **`The Fundamental of Node.js`**
 
 This guide serves as a reference for installing Node.js using `fnm` and understanding the core fundamentals of Node.js including module systems and architecture. This will help you relate your past learning and continue building advanced concepts in the future.
 
@@ -174,7 +190,7 @@ Used to create scope and encapsulate logic:
 <br>
 <br>
 
-# `📘 Node.js Core Modules & Basic Todo App`
+# `Node.js Core Modules and Basic Todo App`
 
 > A concise reference for everything I’ve learned and practiced in Node.js so far.
 
@@ -384,7 +400,7 @@ req.on("end", () => {
 <br>
 <br>
 
-# **`📘 Node.js Core Modules & Basic Todo App`**
+# **`Mastering The Foundation Of Express`**
 
 ## 🧩 ToDo API with Express, TypeScript & MongoDB
 
@@ -584,7 +600,7 @@ app.use((error, req, res, next) => {
 <br>
 <br>
 
-# **`📘 In-Depth Exploration of MongoDB Queries`**
+# **`In-Depth Exploration of MongoDB Queries`**
 
 > A practical and in-depth guide to learning MongoDB queries using the shell, Compass, and GUI tools like NoSQL Booster.
 
@@ -811,7 +827,7 @@ Let me know if you need a printable cheatsheet or Notion version!
 <br>
 <br>
 
-# **`📘 Mastering MongoDB Aggregation & Indexing`**
+# **`Mastering MongoDB Aggregation and Indexing`**
 
 > **Note-style format:** This README is meant for hands-on learners who want quick reference to MongoDB’s core aggregation and indexing concepts, syntax, and use cases. Ideal for interview prep, revision, and fast prototyping.
 
@@ -1048,7 +1064,7 @@ Happy Aggregating! 💪🧮
 <br>
 <br>
 
-# **`📘 Mastering Core Concepts of Mongoose with TypeScript & Express`**
+# **`Mastering Core Concepts of Mongoose with TypeScript and Express`**
 
 A practical learning note on how to integrate Mongoose into a TypeScript + Express.js project using the MVC pattern, build models, perform CRUD operations, and maintain schema consistency in large-scale MongoDB applications.
 
