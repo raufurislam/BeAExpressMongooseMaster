@@ -1,3 +1,4 @@
+// notes.model.ts
 import { model, Schema } from "mongoose";
 import { INote } from "../interfaces/notes.interface";
 
@@ -25,4 +26,4 @@ const noteSchema = new Schema<INote>(
   }
 );
 
-export const Note = model("Note", noteSchema);
+export const Note = model<INote>("Note", noteSchema);

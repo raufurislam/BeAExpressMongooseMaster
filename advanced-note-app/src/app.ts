@@ -1,3 +1,4 @@
+// app.ts
 import express, { Application, Request, Response } from "express";
 import { notesRoutes } from "./app/controllers/notes.controller";
 import { usersRoute } from "./app/controllers/user.controller";

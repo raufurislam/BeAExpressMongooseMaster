@@ -1,3 +1,4 @@
+// user.interface.ts
 export interface IUser {
   firstName: string;
   lastName: string;

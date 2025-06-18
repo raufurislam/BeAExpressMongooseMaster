@@ -1,4 +1,5 @@
-import { Note } from "../models/notes.module";
+// user.interface.ts
+import { Note } from "../models/notes.model";
 import express, { Request, Response } from "express";
 
 export const notesRoutes = express.Router();

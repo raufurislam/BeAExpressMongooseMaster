@@ -1,6 +1,6 @@
+// users.controller.ts;
 import express, { Request, Response } from "express";
 import { User } from "../models/user.model";
-import app from "../../app";
 
 export const usersRoute = express.Router();
 

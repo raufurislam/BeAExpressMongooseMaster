@@ -1,3 +1,4 @@
+// users.model.ts
 import { model, Schema } from "mongoose";
 import { IUser } from "../interfaces/user.interface";
 
@@ -34,4 +35,4 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-export const User = model("User", userSchema);
+export const User = model<IUser>("User", userSchema);
