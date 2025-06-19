@@ -24,20 +24,23 @@ usersRoute.post("/create-user", async (req: Request, res: Response) => {
 
     // body.password = password;
 
-    // const user = await User.create(body);
+    // built in and custom instance method
+    // const user = new User(body);
+    // const hashedPassword = await user.hashPassword(body.password);
+    // user.password = hashedPassword;
+    // await user.save(); // mongoose built in instance method
 
-    const user = new User(body);
+    // built in and custom static method
+    const password = await User.hashPassword(body.password); // static method
+    console.log(password, "Static password");
+    body.password = password;
 
-    // Now TypeScript will recognize the hashPassword method
-    const hashedPassword = await user.hashPassword(body.password);
-    user.password = hashedPassword;
-
-    await user.save(); // mongoose built in instant method
+    await User.create(body);
 
     res.status(201).json({
       success: true,
       message: "User created successfully",
-      user: user,
+      // user: user,
     });
   } catch (error: any) {
     console.log(error);
