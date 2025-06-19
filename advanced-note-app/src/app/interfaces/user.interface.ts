@@ -14,9 +14,4 @@ export interface IUser {
   password: string;
   role: "USER" | "ADMIN" | "SUPERADMIN";
   address: IAddress;
-  // address: {
-  //   city: string;
-  //   street: string;
-  //   zip: number;
-  // };
 }
