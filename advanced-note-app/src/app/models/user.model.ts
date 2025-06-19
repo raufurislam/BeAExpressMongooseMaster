@@ -1,7 +1,12 @@
 // users.model.ts
-import { model, Schema } from "mongoose";
-import { IAddress, IUser } from "../interfaces/user.interface";
+import { Model, model, Schema } from "mongoose";
+import {
+  IAddress,
+  IUser,
+  UserInstanceMethod,
+} from "../interfaces/user.interface";
 import validator from "validator";
+import bcrypt from "bcryptjs";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -14,7 +19,11 @@ const addressSchema = new Schema<IAddress>(
   }
 );
 
-const userSchema = new Schema<IUser>(
+// Add proper typing for the model
+// type UserModel = Model<IUser, {}, UserInstanceMethod>;
+// const userSchema = new Schema<IUser, UserModel, UserInstanceMethod>(
+
+const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethod>(
   {
     email: {
       type: String,
@@ -75,4 +84,16 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-export const User = model<IUser>("User", userSchema);
+// userSchema.method("hashPassword", async function (plainPassword: string) {
+//   const password = await bcrypt.hash(plainPassword, 10);
+//   this.password = password;
+// });
+
+userSchema.method("hashPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(plainPassword, 10);
+  return password;
+});
+
+// export const User = model<IUser, UserModel>("User", userSchema);
+
+export const User = model("User", userSchema);

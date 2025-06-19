@@ -19,7 +19,20 @@ usersRoute.post("/create-user", async (req: Request, res: Response) => {
     // const zodBody = await createUserZodSchema.parseAsync(req.body);
     const body = req.body;
 
-    const user = await User.create(body);
+    // const password = await bcrypt.hash(body.password, 10);
+    // console.log(password);
+
+    // body.password = password;
+
+    // const user = await User.create(body);
+
+    const user = new User(body);
+
+    // Now TypeScript will recognize the hashPassword method
+    const hashedPassword = await user.hashPassword(body.password);
+    user.password = hashedPassword;
+
+    await user.save(); // mongoose built in instant method
 
     res.status(201).json({
       success: true,
