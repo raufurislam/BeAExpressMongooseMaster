@@ -31,16 +31,17 @@ usersRoute.post("/create-user", async (req: Request, res: Response) => {
     // await user.save(); // mongoose built in instance method
 
     // built in and custom static method
-    const password = await User.hashPassword(body.password); // static method
-    console.log(password, "Static password");
-    body.password = password;
+    // const password = await User.hashPassword(body.password); // static method
+    // console.log(password, "Static password");
+    // body.password = password;
 
-    await User.create(body);
+    // Pre save hook
+    const user = await User.create(body);
 
     res.status(201).json({
       success: true,
       message: "User created successfully",
-      // user: user,
+      user: user,
     });
   } catch (error: any) {
     console.log(error);
