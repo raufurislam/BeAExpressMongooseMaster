@@ -10,6 +10,7 @@
 - [In-Depth Exploration of MongoDB Queries](#in-depth-exploration-of-mongodb-queries)
 - [Mastering MongoDB Aggregation and Indexing](#mastering-mongodb-aggregation-and-indexing)
 - [Mastering Core Concepts of Mongoose with TypeScript and Express](#mastering-core-concepts-of-mongoose-with-typescript-and-express)
+- [Mastering Advanced Mongoose Concepts](#mastering-advanced-mongoose-concepts)
 
 <br>
 <br>
@@ -1177,6 +1178,176 @@ Organized the app following **Model-View-Controller** pattern:
 <br>
 <br>
 
+# `Mastering Advanced Mongoose Concepts`
+
+> A practical, example-based summary of core concepts in Mongoose: validation, embedding, population, hooks, methods, and more.
+
+---
+
+## ✅ Validations in Mongoose
+
+### 🔹 Built-in Validations
+
+- **String**: `required`, `minlength`, `maxlength`, `trim`, `lowercase`, `uppercase`
+- **Number**: `min`, `max`
+- **Enum**: restricts a value to predefined set
+- `unique`: creates an index (note: not true validation)
+
+### 🔹 Custom Validation
+
+```ts
+validate: {
+  validator: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+  message: (props) => `${props.value} is not a valid email`,
+}
+```
+
+### 🔹 Using 3rd Party Validators
+
+- Install: `npm i validator`
+
+```ts
+validate: [validator.isEmail, "Invalid email"];
+```
+
+### 🔹 Schema Validation using Zod
+
+- Install: `npm install zod`
+
+```ts
+const createUserZodSchema = z.object({
+  firstName: z.string(),
+  email: z.string().email(),
+  age: z.number().min(12),
+});
+```
+
+---
+
+## 📦 Embedding vs Referencing
+
+### 🔸 Embedding (Subdocument)
+
+- Used when tightly coupled data.
+- Example: `addressSchema` embedded inside `User`.
+
+```ts
+const addressSchema = new Schema(
+  {
+    city: String,
+    street: String,
+    zip: Number,
+  },
+  { _id: false }
+);
+```
+
+### 🔸 Referencing (Population)
+
+- Used for separate documents linked by `_id`.
+- `ref` must match the model name.
+
+```ts
+user: { type: Schema.Types.ObjectId, ref: 'User' }
+```
+
+- Usage:
+
+```ts
+Note.find().populate("user");
+```
+
+---
+
+## 🔁 Instance & Static Methods
+
+### 🔹 Instance Method
+
+- Defined with `schema.method()`
+- Works on a document instance
+
+```ts
+schema.method("hashPassword", async function (password) {
+  return await bcrypt.hash(password, 10);
+});
+```
+
+### 🔹 Static Method
+
+- Defined with `schema.static()`
+- Called directly on the model
+
+```ts
+schema.static("hashPassword", async function (password) {
+  return await bcrypt.hash(password, 10);
+});
+```
+
+---
+
+## 🔄 Mongoose Middleware (Hooks)
+
+### 🔸 Pre Hooks
+
+- `pre('save')`, `pre('find')`, etc.
+- Run **before** execution
+
+```ts
+userSchema.pre("save", async function (next) {
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+```
+
+### 🔸 Post Hooks
+
+- `post('save')`, `post('findOneAndDelete')`, etc.
+- Run **after** execution
+
+```ts
+userSchema.post("findOneAndDelete", async function (doc, next) {
+  if (doc) await Note.deleteMany({ user: doc._id });
+  next();
+});
+```
+
+---
+
+## 🌐 Virtual Fields
+
+- Computed properties not stored in DB
+
+```ts
+userSchema.virtual("fullname").get(function () {
+  return `${this.firstName} ${this.lastName}`;
+});
+```
+
+- Must enable:
+
+```ts
+toJSON: { virtuals: true },
+toObject: { virtuals: true }
+```
+
+---
+
+## 📚 Summary
+
+- Built-in validations ensure schema-level safety
+- Custom and 3rd party validation enhances flexibility
+- Zod adds runtime-level validation
+- Embedding fits nested, tight data; referencing suits relational structures
+- Mongoose methods (instance/static) help reusability
+- Middleware hooks give lifecycle control
+- Virtuals allow computed values without saving
+
+---
+
+Happy Schema Crafting! 🧠🔐
+
+<br>
+<br>
 ## 🙋‍♂️ Author
 
 **Raufur Islam Nayem**
